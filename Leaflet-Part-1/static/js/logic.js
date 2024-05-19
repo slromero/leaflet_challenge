@@ -73,7 +73,7 @@ function createFeatures(earthquakeData) {
   let legend = L.control({ position: "bottomright" });
   legend.onAdd = function() {
     let div = L.DomUtil.create("div", "info legend");
-
+    div.innerHTML += "<H3>Earthquake</br>Depth (km)</H3>";
     //set legend lines
     for (let i = 0; i < limits.length; i++) {
       div.innerHTML += "<i style='background: " + legendColor(limits[i] + 1) + "'></i> " +
