@@ -5,12 +5,11 @@ let queryUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_we
 d3.json(queryUrl).then(function (data) {
     // Once we get a response, send the data.features object to the createFeatures function.
     createFeatures(data.features);
-    // console.log("data.features: ", data.features)
 });
 
 // Creating the map object
 let myMap = L.map("map", {
-  center: [40.863848, -96.674824],
+  center: [58.5888, -154.4931],
   zoom: 5
 });  
 
@@ -20,12 +19,27 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(myMap);
 
 function markerSize(magnitude) {
-  return Number(Math.sqrt(magnitude)*50000)
+  return Number(Math.sqrt(magnitude)*20000)
 }
 
-function markerColor(depth) {
-  return Number(Math.sqrt(depth)*40000)
+// function markerColor(depth) {
+//   return Number(Math.sqrt(depth)*40000)
+// }
+
+function legendColor(depth) {
+  return depth > 90 ? "#080000" :
+         depth > 80 ? "#d7191c" :
+         depth > 70 ? "#ff7070" :
+         depth > 60 ? "#f29e2e" :
+         depth > 50 ? "#f9d057" :
+         depth > 40 ? "#ffff8c" :
+         depth > 30 ? "#90eb9d" :
+         depth > 20 ? "#00ccbc" :
+         depth > 10 ? "#00a6ca" :
+                      "#2c7bb6";
 }
+
+//let colors = ["#2c7bb6","#00a6ca","#00ccbc","#90eb9d","#ffff8c","#f9d057","#f29e2e","#e76818","#d7191c"]
 
 function createFeatures(earthquakeData) {
 
@@ -39,8 +53,9 @@ function createFeatures(earthquakeData) {
 
     if (!isNaN(magnitude) || !isNaN(depth)) {
       L.circle([latitude,longitude], {
-          fillOpacity: 0.35,
-          fillColor: markerColor(depth),
+          fillOpacity: 0.75,
+          //apply function to set legend color palette
+          fillColor: legendColor(depth),
           color:"green",
           weight:1,
           radius: markerSize(magnitude)
@@ -53,28 +68,19 @@ function createFeatures(earthquakeData) {
     }
   }
 
-  // Set up the legend.
-  limits = [];
+  // Set up the legend
+  //define legend bins
+  limits = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90];
+  //position the legend
   let legend = L.control({ position: "bottomright" });
   legend.onAdd = function() {
     let div = L.DomUtil.create("div", "info legend");
-    let colors = ["#2c7bb6","#00a6ca","#00ccbc","#90eb9d","#ffff8c","#f9d057","#f29e2e","#e76818","#d7191c"]
-    let labels = [];
 
-    // Add the minimum and maximum.
-    let legendInfo = "<h2>Earthquake Depth</h2>" +
-      "<div class=\"labels\">" +
-        "<div class=\"min\">" + Math.min(limits) + "</div>" +
-        "<div class=\"max\">" + Math.max(limits) + "</div>" +
-      "</div>";
-
-    div.innerHTML = legendInfo;
-
-    limits.forEach(function(limit, index) {
-      labels.push("<li style=\"background-color: " + colors[index] + "\"></li>");
-    });
-
-    div.innerHTML += "<ul>" + labels.join("") + "</ul>";
+    //set legend lines
+    for (let i = 0; i < limits.length; i++) {
+      div.innerHTML += "<i style='background: " + legendColor(limits[i] + 1) + "'></i> " +
+       limits[i] + (limits[i + 1] ? "&ndash;" + limits[i + 1] + "<br>" : "+");
+    }
     return div;
   };
 
