@@ -8,7 +8,7 @@ areas of the United States and nearby countries with datapoints.
 
 Kind assistance to get the legend to display was provided by AskBCS TA.  
 
-References:
+##### References:
 https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson
 https://www.visualcinnamon.com/2016/05/smooth-color-legend-d3-svg-gradient/
 https://leafletjs.com/reference.html
