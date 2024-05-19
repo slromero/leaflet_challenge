@@ -39,8 +39,6 @@ function legendColor(depth) {
                       "#2c7bb6";
 }
 
-//let colors = ["#2c7bb6","#00a6ca","#00ccbc","#90eb9d","#ffff8c","#f9d057","#f29e2e","#e76818","#d7191c"]
-
 function createFeatures(earthquakeData) {
 
   // Loop through the earthquakes array, and create one marker for each earthquake object.
